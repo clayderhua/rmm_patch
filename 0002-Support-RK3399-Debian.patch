@@ -1,0 +1,57 @@
+From 2e43518e99b5008418e28590ba8e9235db46037f Mon Sep 17 00:00:00 2001
+From: Daniel Hung <daniel.hung@advantech.com.tw>
+Date: Thu, 16 May 2019 10:30:34 +0800
+Subject: [PATCH 2/2] Support RK3399 Debian
+
+---
+ build/Standard/autobuild.sh | 9 ++++++++-
+ risc-env                    | 6 ++++++
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/build/Standard/autobuild.sh b/build/Standard/autobuild.sh
+index 3dd35d5c..4f6fa57f 100755
+--- a/build/Standard/autobuild.sh
++++ b/build/Standard/autobuild.sh
+@@ -79,6 +79,10 @@ if [ "$RISC_TARGET" == "risc" ] && [ "$OS_VERSION" == "yocto" ]; then
+ 	platform="$RISC_TARGET"_"$OS_VERSION"
+ 	ARCH="$CHIP_VANDER"_"$PLATFORM"
+ 	VER="$OS_VERSION"
++elif [ "$RISC_TARGET" == "risc" ] && [ "$OS_VERSION" == "debian" ]; then
++        platform="$RISC_TARGET"_"$OS_VERSION"
++        ARCH="$CHIP_VANDER"_"$PLATFORM"
++        VER="$OS_VERSION"
+ elif [ "$RISC_TARGET" == "x86" ] && [ "$OS_VERSION" == "yocto" ]; then
+ 	platform="$RISC_TARGET"_"$OS_VERSION"
+ 	ARCH="$CHIP_VANDER"_"$PLATFORM"
+@@ -113,7 +117,10 @@ case $platform in
+   Ubuntu* )
+     SCRIPT_TARGET_PLATFORM="Ubuntu"
+     ;;
+-  risc_yoct* )
++  risc_yocto )
++    SCRIPT_TARGET_PLATFORM="RISC_Yocto"
++    ;;
++  risc_debian )
+     SCRIPT_TARGET_PLATFORM="RISC_Yocto"
+     ;;
+   x86_yoct* )
+diff --git a/risc-env b/risc-env
+index de815717..24dfa909 100644
+--- a/risc-env
++++ b/risc-env
+@@ -70,6 +70,12 @@ elif [ "$TARGET" == "risc-wise-openwrt-yocto" ] ; then
+     TARGET_PLATFORM_ARCH="ipq806x"
+     export STAGING_DIR=$ROOTFS
+ 	ENV_SCRIPT=/opt/openwrt/ipq806x/environment-setup-cortexa7-ipq806x-openwrt-unix-gnueabi
++elif [ "$TARGET" == "risc-rk-3399-debian" ] ; then
++    ENV_SCRIPT=/opt/poky/rk-debian9/environment-setup-aarch64-linux-gnu
++    ROOTFS=/opt/poky/rk-debian9/sysroots/20190515
++    HOST="aarch64-linux-gnu"
++    TARGET_PLATFORM_NAME="Debian_9.9"
++    TARGET_PLATFORM_ARCH="rk3399"
+ fi
+ #========= Cross toolchain =============================================================
+ source $ENV_SCRIPT
+-- 
+2.17.1
+
